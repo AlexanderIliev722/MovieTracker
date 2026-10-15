@@ -11,19 +11,40 @@
 
 @if (isLoading)
 {
-    <div class="state-panel"><span class="spinner" aria-hidden="true"></span><h2>Loading movies…</h2><p>Asking the API for the latest catalogue.</p></div>
+    <div class="state-panel">
+        <span class="spinner" aria-hidden="true"></span>
+        <h2>Loading movies…</h2>
+        <p>Asking the API for the latest catalogue.</p>
+    </div>
 }
 else if (errorMessage is not null)
 {
-    <div class="state-panel error-panel" role="alert"><span class="state-icon">!</span><h2>We couldn't load the movies</h2><p>@errorMessage</p><button class="button" @onclick="LoadMoviesAsync">Try again</button></div>
+    <div class="state-panel error-panel" role="alert">
+        <span class="state-icon">!</span>
+        <h2>We couldn't load the movies</h2>
+        <p>@errorMessage</p>
+        <button class="button" @onclick="LoadMoviesAsync">Try again</button>
+    </div>
 }
 else if (response is null || response.Items.Count == 0)
 {
-    <div class="state-panel"><h2>No movies yet</h2><p>The in-memory catalogue is ready for its first title.</p></div>
+    <div class="state-panel empty-panel">
+        <span class="state-icon">🎬</span>
+        <h2>No movies found</h2>
+        <p>The catalogue is currently empty. Add your first title to get started.</p>
+    </div>
 }
 else
 {
-    <div class="catalogue-meta page-section"><span>@response.TotalCount movies</span><span>Sorted by title</span></div>
+    <div class="catalogue-meta page-section" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: rgba(255, 255, 255, 0.04); border-radius: 8px;">
+        <span style="font-weight: 600;">
+            🎬 Showing <strong style="color: #646cff;">@response.TotalCount</strong> @(response.TotalCount == 1 ? "movie" : "movies")
+        </span>
+        <span style="opacity: 0.8; font-size: 0.9rem;">
+            Sorted by title (A–Z)
+        </span>
+    </div>
+
     <section class="movie-grid page-section" aria-label="Movie catalogue">
         @foreach (var movie in response.Items)
         {
